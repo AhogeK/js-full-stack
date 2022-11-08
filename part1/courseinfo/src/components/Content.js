@@ -2,9 +2,8 @@ import Part from "./Part";
 
 const Content = (props) => {
   console.log(props)
-  const parts = props.parts.map((object, index) => {
-    const values = Object.values(object);
-    return <Part key={index} part={values[0]} exercise={values[1]}/>
+  const parts = props.parts.map((part, index) => {
+    return <Part key={index} part={part.name} exercise={part.exercises}/>
   })
   return <div>{parts}</div>
 }
