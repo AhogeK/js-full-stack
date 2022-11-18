@@ -527,3 +527,261 @@ ES6类的语法在 "老 "React和Node.js中用得很多,而在React的新的[Hoo
 * 强烈建议先阅读一遍[JavaScript再认识（JS教程）](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_Overview)
 * [You-Dont-Know-JS](https://github.com/getify/You-Dont-Know-JS)
 * [javascript.info](https://javascript.info/)
+
+## 组件状态，事件处理
+
+```jsx
+const Hello = (props) => {
+  return (
+    <div>
+      <p>
+        Hello {props.name}, you are {props.age} years old
+      </p>
+    </div>
+  )
+}
+
+const App = () => {
+  const name = 'Peter'
+  const age = 10
+
+  return (
+    <div>
+      <h1>Greetings</h1>
+      <Hello name="Maya" age={26 + 10} />
+      <Hello name={name} age={age} />
+    </div>
+  )
+}
+```
+
+### Component helper functions
+
+扩展Hello组件，猜测问候人的出生年份
+
+```jsx
+const Hello = (props) => {
+  const bornYear = () => {
+    const yearNow = new Date().getFullYear()
+    return yearNow - props.age
+  }
+
+  return (
+    <div>
+      <p>
+        Hello {props.name}, you are {props.age} years old
+      </p>
+      <p>So you were probably born in {bornYear()}</p>
+    </div>
+  )
+}
+```
+
+### Destructuring
+
+* [destructure解构](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+
+```js
+const [a, b] = array;
+const [a, , b] = array;
+const [a = aDefault, b] = array;
+const [a, b, ...rest] = array;
+const [a, , b, ...rest] = array;
+const [a, b, ...{ pop, push }] = array;
+const [a, b, ...[c, d]] = array;
+
+const { a, b } = obj;
+const { a: a1, b: b1 } = obj;
+const { a: a1 = aDefault, b = bDefault } = obj;
+const { a, b, ...rest } = obj;
+const { a: a1, b: b1, ...rest } = obj;
+const { [key]: a } = obj;
+
+let a, b, a1, b1, c, d, rest, pop, push;
+[a, b] = array;
+[a, , b] = array;
+[a = aDefault, b] = array;
+[a, b, ...rest] = array;
+[a, , b, ...rest] = array;
+[a, b, ...{ pop, push }] = array;
+[a, b, ...[c, d]] = array;
+
+({ a, b } = obj); // brackets are required
+({ a: a1, b: b1 } = obj);
+({ a: a1 = aDefault, b = bDefault } = obj);
+({ a, b, ...rest } = obj);
+({ a: a1, b: b1, ...rest } = obj);
+```
+
+```jsx
+const Hello = (props) => {
+  const name = props.name
+  const age = props.age
+
+  const bornYear = () => new Date().getFullYear() - age
+
+  return (
+    <div>
+      <p>Hello {name}, you are {age} years old</p>
+      <p>So you were probably born in {bornYear()}</p>
+    </div>
+  )
+}
+```
+
+```jsx
+const bornYear = () => new Date().getFullYear() - age
+
+const bornYear = () => {
+  return new Date().getFullYear() - age
+}
+```
+
+```jsx
+const Hello = (props) => {
+  const { name, age } = props
+  const bornYear = () => new Date().getFullYear() - age
+
+  return (
+    <div>
+      <p>Hello {name}, you are {age} years old</p>
+      <p>So you were probably born in {bornYear()}</p>
+    </div>
+  )
+}
+```
+
+```jsx
+const Hello = ({ name, age }) => {
+  const bornYear = () => new Date().getFullYear() - age
+
+  return (
+    <div>
+      <p>
+        Hello {name}, you are {age} years old
+      </p>
+      <p>So you were probably born in {bornYear()}</p>
+    </div>
+  )
+}
+```
+
+### Page re-rendering
+
+创建一个计数器
+
+```jsx
+const App = (props) => {
+  const {counter} = props
+  return (
+    <div>{counter}</div>
+  )
+}
+
+export default App
+```
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+
+import App from './App'
+
+let counter = 1
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <App counter={counter} />
+)
+```
+
+```jsx
+const refresh = () => {
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <App counter={counter} />
+  )
+}
+
+setInterval(() => {
+  refresh()
+  counter += 1
+}, 1000)
+```
+
+### Stateful component
+
+* [状态钩子](https://reactjs.org/docs/hooks-state.html)
+
+```jsx
+import React, { useState } from 'react';
+
+function Example() {
+  // Declare a new state variable, which we'll call "count"
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+```
+
+```jsx
+import { useState } from 'react'
+
+const App = () => {
+  const [ counter, setCounter ] = useState(0)
+
+  setTimeout(
+    () => setCounter(counter + 1),
+    1000
+  )
+
+  return (
+    <div>{counter}</div>
+  )
+}
+
+export default App
+```
+
+### Event handling
+
+* [注册一个事件处理函数](https://reactjs.org/docs/handling-events.html)
+
+```jsx
+const App = () => {
+  const [ counter, setCounter ] = useState(0)
+
+  return (
+    <div>
+      <div>{counter}</div>
+      <button onClick={() => setCounter(counter + 1)}>
+        plus
+      </button>
+      <button onClick={() => setCounter(0)}>
+        zero
+      </button>
+    </div>
+  )
+}
+```
+
+### Passing state to child components
+
+* [状态提升](https://reactjs.org/docs/lifting-state-up.html)
+
+### Refactoring the components
+
