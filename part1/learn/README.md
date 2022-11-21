@@ -785,3 +785,280 @@ const App = () => {
 
 ### Refactoring the components
 
+## 深入 React 应用调试
+
+### A note on React version
+
+如果你最终因为库的兼容性问题而导致你的应用崩溃，降级到旧版React，方法是改变文件package.json。
+
+```json
+{
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.0",
+    "web-vitals": "^2.1.4"
+  }
+}
+```
+
+随后进行安装
+
+``npm install``
+
+React17 与 18 的 index.js 区别
+
+**17**
+
+```jsx
+import ReactDOM from 'react-dom'
+import App from './App'
+
+ReactDOM.render(<App />, document.getElementById('root'))
+```
+
+**18**
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+```
+
+### Complex state
+
+```jsx
+const App = () => {
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
+
+  return (
+    <div>
+      {left}
+      <button onClick={() => setLeft(left + 1)}>
+        left
+      </button>
+      <button onClick={() => setRight(right + 1)}>
+        right
+      </button>
+      {right}
+    </div>
+  )
+}
+```
+
+```jsx
+const App = () => {
+  const [clicks, setClicks] = useState({
+    left: 0, right: 0
+  })
+
+  const handleLeftClick = () => {
+    const newClicks = {
+      left: clicks.left + 1,
+      right: clicks.right
+    }
+    setClicks(newClicks)
+  }
+
+  const handleRightClick = () => {
+    const newClicks = {
+      left: clicks.left,
+      right: clicks.right + 1
+    }
+    setClicks(newClicks)
+  }
+
+  return (
+    <div>
+      {clicks.left}
+      <button onClick={handleLeftClick}>left</button>
+      <button onClick={handleRightClick}>right</button>
+      {clicks.right}
+    </div>
+  )
+}
+```
+
+#### [对象传播](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+
+```jsx
+const handleLeftClick = () => {
+  const newClicks = {
+    ...clicks,
+    left: clicks.left + 1
+  }
+  setClicks(newClicks)
+}
+
+const handleRightClick = () => {
+  const newClicks = {
+    ...clicks,
+    right: clicks.right + 1
+  }
+  setClicks(newClicks)
+}
+```
+
+对上述代码进行简化
+
+```jsx
+const handleLeftClick = () =>
+  setClicks({ ...clicks, left: clicks.left + 1 })
+
+const handleRightClick = () =>
+  setClicks({ ...clicks, right: clicks.right + 1 })
+```
+
+[在React中禁止直接改变状态](https://stackoverflow.com/questions/66799555/cant-we-just-mutate-state-what-is-the-side-effect/66799937#66799937).
+改变状态必须始终通过将状态设置为一个新的对象来完成
+
+*将所有的状态存储在一个单一的状态对象中，对于这个特殊的应用来说是一个糟糕的选择;没有明显的好处，而且由此产生的应用也更加复杂。在这种情况下，将点击计数器存储在不同的状态中是一个更合适的选择。*
+
+* [Should I use one or many state variables?](https://reactjs.org/docs/hooks-faq.html#should-i-use-one-or-many-state-variables)
+
+### Handling arrays
+
+```jsx
+const App = () => {
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
+  const [allClicks, setAll] = useState([])
+
+  const handleLeftClick = () => {
+    setAll(allClicks.concat('L'))
+    setLeft(left + 1)
+  }
+
+  const handleRightClick = () => {
+    setAll(allClicks.concat('R'))
+    setRight(right + 1)
+  }
+
+  return (
+    <div>
+      {left}
+      <button onClick={handleLeftClick}>left</button>
+      <button onClick={handleRightClick}>right</button>
+      {right}
+      <p>{allClicks.join(' ')}</p>
+    </div>
+  )
+}
+```
+
+### Conditional rendering
+
+* [Conditional Rendering](https://reactjs.org/docs/conditional-rendering.html)
+
+```jsx
+const History = (props) => {
+  if (props.allClicks.length === 0) {
+    return (
+      <div>
+        the app is used by pressing the buttons
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      button press history: {props.allClicks.join(' ')}
+    </div>
+  )
+}
+
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
+const App = () => {
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
+  const [allClicks, setAll] = useState([])
+
+  const handleLeftClick = () => {
+    setAll(allClicks.concat('L'))
+    setLeft(left + 1)
+  }
+
+  const handleRightClick = () => {
+    setAll(allClicks.concat('R'))
+    setRight(right + 1)
+  }
+
+  return (
+    <div>
+      {left}
+      <Button handleClick={handleLeftClick} text='left' />
+      <Button handleClick={handleRightClick} text='right' />
+      {right}
+      <History allClicks={allClicks} />
+    </div>
+  )
+}
+```
+
+### Old React
+
+**我们使用的 [state hook](https://reactjs.org/docs/hooks-state.html)是从React16.8.0版本才可以书用**
+
+### Debugging React applications
+
+**"The first rule of web development"**
+    
+    始终保持浏览器的开发者控制台是打开的
+
+    如果当你的代码无法编译，你的浏览器像圣诞树一样亮起来的时候。
+    不要写更多的代码，而是要立即找到并解决这个问题。在编码的历史上，还没有出现过这样的时刻：
+    在编写了大量的额外代码之后，无法编译的代码会奇迹般地开始工作。我非常怀疑在这个课程中是否会发生这样的事情。
+
+* [debugger](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)
+
+### Rules of Hooks
+
+**简而言之，钩子只能从定义了React组件的函数体内部调用。**
+
+```jsx
+const App = () => {
+  // these are ok
+  const [age, setAge] = useState(0)
+  const [name, setName] = useState('Juha Tauriainen')
+
+  if ( age > 10 ) {
+    // this does not work!
+    const [foobar, setFoobar] = useState(null)
+  }
+
+  for ( let i = 0; i < age; i++ ) {
+    // also this is not good
+    const [rightWay, setRightWay] = useState(false)
+  }
+
+  const notGood = () => {
+    // and this is also illegal
+    const [x, setX] = useState(-1000)
+  }
+
+  return (
+      //...
+      <App />
+  )
+}
+```
+
+### Do Not Define Components Within Components
+
+不要在其他组件中定义组件。这种方法没有任何好处，而且会导致许多不愉快的问题。
+最大的问题是由于React在每次渲染时都将定义在另一个组件内的组件视为一个新的组件。
+这使得React无法优化该组件。
+
+### Useful Reading
+
+* [官方React文档](https://reactjs.org/docs/hello-world.html)
+* [Egghead.io](https://egghead.io/)

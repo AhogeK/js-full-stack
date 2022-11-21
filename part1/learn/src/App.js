@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Comment from "./components/Comment";
 import Display from "./components/Display";
 import Button from "./components/Button";
+import {useNavigate} from "react-router-dom";
 
 function Welcome(props) {
   return <h1>Hello, {props.name}</h1>
@@ -53,6 +54,8 @@ const App = () => {
   const increaseByOne = () => setCounter(counter + 1)
   const setToZero = () => setCounter(0)
 
+  let navigate = useNavigate();
+
   return (
       <>
         <p>Hello World, it is {now.toString()}</p>
@@ -70,10 +73,12 @@ const App = () => {
         <Hello name={name} age={age}/>
         <div>
           <Display counter={counter}/>
-          <Button onClick={increaseByOne} text={"plus"} />
-          <Button onClick={setToZero} text={"zero"} />
+          <Button onClick={increaseByOne} text={"plus"}/>
+          <Button onClick={setToZero} text={"zero"}/>
           <Button onClick={() => setCounter(counter - 1)} text={"minus"}/>
         </div>
+        <br/>
+        <Button onClick={() => navigate("/conditional-rendering")} text={"Conditional Rendering"}/>
       </>
   )
 }
