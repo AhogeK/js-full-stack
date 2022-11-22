@@ -1,7 +1,6 @@
-const Total = (props) => {
-  let sum = 0;
-  props.exercises.forEach(part => sum += part.exercises)
-  return <p>Number of exercises {sum}</p>
+const Total = ({exercises}) => {
+  const sum = exercises.map(item => item.exercises).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+  return <b><p>total of {sum} exercises</p></b>
 }
 
 export default Total
