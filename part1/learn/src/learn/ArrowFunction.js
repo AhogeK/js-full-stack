@@ -8,7 +8,7 @@ const arrowFunction = () => {
   ];
   console.log(materials.map(material => material.length));
 
-  // This will return the object {foo: "a}
+  // This will return the object {foo: "a"}
   const testReturn = (params) => ({foo: params.name})
   console.log(testReturn({name: "王浩哲"}))
 
