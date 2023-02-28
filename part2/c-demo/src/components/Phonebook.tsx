@@ -10,16 +10,19 @@ const Phonebook = () => {
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [searchName, setSearchName] = useState('')
 
   const handleNameChange = (event: React.FormEvent<HTMLInputElement>) => {
     setNewName(event.currentTarget.value)
   }
-
   const handleNumberChange = (event: React.FormEvent<HTMLInputElement>) => {
     setNewNumber(event.currentTarget.value)
   }
+  const handleSearchName = (event: React.FormEvent<HTMLInputElement>) => {
+    setSearchName(event.currentTarget.value)
+  }
 
-  const addName = (event: React.FormEvent<HTMLFormElement>) => {
+  const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const newPerson = {
       name: newName,
@@ -42,7 +45,11 @@ const Phonebook = () => {
   return (
     <>
       <h2>Phonebook</h2>
-      <form onSubmit={addName}>
+      <div>
+        <span>filter shown with</span> <input value={searchName} onChange={handleSearchName}/>
+      </div>
+      <h3>Add a new</h3>
+      <form onSubmit={addPerson}>
         <div>
           <div>
             <div className="label">name:</div>
@@ -53,11 +60,11 @@ const Phonebook = () => {
           <button type="submit">add</button>
         </div>
       </form>
-      <h2>
+      <h3>
         Numbers
-      </h2>
+      </h3>
       <ul>
-        {persons.map(person => (
+        {persons.filter(person => person.name.toLowerCase().indexOf(searchName.toLowerCase()) != -1).map(person => (
           <li key={person.name}>
             <b>{person.name}</b> | <b>{person.number}</b>
           </li>
