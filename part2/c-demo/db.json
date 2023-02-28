@@ -1,0 +1,31 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "text": "笔记1"
+    },
+    {
+      "id": 2,
+      "text": "笔记2"
+    },
+    {
+      "id": 3,
+      "text": "笔记3"
+    }
+  ],
+  "foobar": {
+    "content": "页脚内容"
+  },
+  "exercisesMenu": [
+    {
+      "id": 1,
+      "name": "The Phonebook",
+      "path": "/phonebook"
+    },
+    {
+      "id": 2,
+      "name": "Data for countries",
+      "path": "/dataCountries"
+    }
+  ]
+}

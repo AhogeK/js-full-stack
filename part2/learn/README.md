@@ -159,6 +159,24 @@ const addNote = (event) => {
 ``notes.concat(noteObject)``该方法并不改变原始的notes数组，而是创建一个新的数组副本，将新的项目添加到最后。
 这很重要，因为在React中我们必须[永远不要直接改变状态](https://reactjs.org/docs/state-and-lifecycle.html#using-state-correctly)!
 
-### Filtering Displayed Elements
+### [Filtering Displayed Elements](https://fullstackopen.com/zh/part2/%E8%A1%A8%E5%8D%95#filtering-displayed-elements)
 
+## 从服务器获取数据
 
+* [JSON服务器](https://github.com/typicode/json-server)
+
+### The browser as a runtime environment
+
+* [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)
+
+XHR不再推荐，不多做介绍
+
+* [fetch](https://developer.mozilla.org/en-US/docs/Web/API/fetch)
+* [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+* [异步模型](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
+* [事件循环到底是什么](https://www.youtube.com/watch?v=8aGhZQkoFbQ)
+* [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
+* [Multithreading Javascript](https://medium.com/techtrument/multithreading-javascript-46156179cf9a)
+* [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+* [useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect)
+* [Why It's So Hard to Check Object Equality in JavaScript](https://www.joshbritz.co/posts/why-its-so-hard-to-check-object-equality/)

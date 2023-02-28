@@ -1,6 +1,6 @@
 import {useState} from 'react'
 
-// a proper place to define a component
+// a proper place to define a components
 const Statistics = ({goodNum, neutralNum, badNum}) => {
   if (goodNum > 0 || neutralNum > 0 && badNum > 0) {
     const all = goodNum + neutralNum + badNum

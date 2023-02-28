@@ -86,7 +86,7 @@ here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-
 
 ### Component
 
-* [React 组建](https://reactjs.org/docs/components-and-props.html)
+* [React 组件](https://reactjs.org/docs/components-and-props.html)
 * [箭头函数](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)
 * [ECMAScript 6](http://es6-features.org/#Constants)
 
